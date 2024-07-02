@@ -23,7 +23,9 @@ const ProductView = ({product, onClickProduct}) => {
           </div>
 
           <div className="w-1/3 flex flex-col justify-center items-center">
-            <div className="w-full h-24 bg-white"></div>
+            <div className="w-full h-full">
+                <img src={product.imageUrl} />
+            </div>
           </div>
         </div>
       </div>

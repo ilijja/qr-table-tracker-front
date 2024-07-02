@@ -1,13 +1,15 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { loadStripe } from "@stripe/stripe-js";
 import OrderContext from "../../store/OrderContext";
 import BottomModal from "./BottomModal";
 import DivideEqualy from "./split/DivideEqualyView";
-import { PencilIcon } from "@heroicons/react/24/solid";
 import PayForYourItemsView from "./split/PayForYourItemsView";
 import TipView from "./split/TipView";
+import { PencilIcon } from "@heroicons/react/24/solid";
+import { getAuthToken } from "../../util/auth";
 
 const PaymentView = () => {
-  const { order } = useContext(OrderContext);
+  const { order, userSelectedItems } = useContext(OrderContext);
   const [orderItem, setOrderItem] = useState(null);
   const [showSplitModal, setShowSplit] = useState(false);
   const [modalContent, setModalContent] = useState("");
@@ -26,7 +28,7 @@ const PaymentView = () => {
   const onYourPriceHandler = (price) => {
     setUsersPrice(price);
     setShowSplit(false);
-    scrollBottom()
+    scrollBottom();
   };
 
   const onCancelSplitHandler = () => {
@@ -84,10 +86,60 @@ const PaymentView = () => {
 
   const scrollBottom = () => {
     window.scrollTo({
-      top: document.documentElement.scrollHeight, 
-      behavior: 'smooth' 
+      top: document.documentElement.scrollHeight,
+      behavior: "smooth",
     });
-  }
+  };
+
+  const handlePayment = async () => {
+    try {
+      let items;
+
+      items = userSelectedItems.userSelectedItems.map((item) => ({
+        ...item,
+        quantity: (item.quantity + 1) / 2,
+      }));
+
+      if (items.length === 0) {
+        items = orderItem.items.map((item) => ({
+          id: item._id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+        }));
+      }
+
+      const stripe = await loadStripe(
+        "pk_test_51PS1rAKYFxEEKfUw800jkVWn8ZncuxsTkh3uvhclOWFWE2s3H1JzYQjOMDSRRGfuI3KiOHRYDN999vedLnY3BuP5005KirZCKE"
+      );
+
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(items),
+      };
+
+      const response = await fetch("http://localhost:8080/payment", options);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const session = await response.json();
+
+      const result = await stripe.redirectToCheckout({
+        sessionId: session.id,
+      });
+
+      if (result.error) {
+        console.error(result.error.message);
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+    }
+  };
 
   return (
     <>
@@ -119,10 +171,10 @@ const PaymentView = () => {
                       <li key={product._id} className="flex py-6">
                         <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                           {/* <img
-                    src={product.imageSrc}
-                    alt={product.imageAlt}
-                    className="h-full w-full object-cover object-center"
-                  /> */}
+                                                    src={product.imageSrc}
+                                                    alt={product.imageAlt}
+                                                    className="h-full w-full object-cover object-center"
+                                                /> */}
                         </div>
 
                         <div className="ml-4 flex flex-1 flex-col">
@@ -168,7 +220,7 @@ const PaymentView = () => {
             type="button"
             onClick={() => {
               setUsersPrice(orderItem.totalPrice);
-              scrollBottom()
+              scrollBottom();
             }}
             className="rounded-full w-full bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
@@ -253,6 +305,7 @@ const PaymentView = () => {
           <div className="my-8">
             <button
               type="button"
+              onClick={handlePayment}
               className="rounded-full w-full bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Confirm payment

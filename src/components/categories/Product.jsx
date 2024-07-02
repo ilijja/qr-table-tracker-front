@@ -15,6 +15,7 @@ const Product = ({ product }) => {
   const isAdminRoute = location.pathname.startsWith("/products");
 
   const onClickProductHandler = () => {
+    console.log(product.image);
     if (token && isAdminRoute) {
       userProgressCtx.setCurrentProduct(product);
       userProgressCtx.setCurrentProductMethod("PUT");

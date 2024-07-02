@@ -26,7 +26,9 @@ const ProductModalView = ({ product, hideSplit, addOrder }) => {
         </div>
 
       <div>
-        <div className="bg-gray-100 h-56 flex-shrink-0"></div>
+        <div className="bg-gray-100 h-56 flex-shrink-0">
+          <img className="w-full h-full" src={product.imageUrl} alt="" />
+        </div>
 
         <div className="flex flex-col gap-8 p-5">
           <h1 className="text-4xl font-semibold text-zinc-800">{product.name}</h1>

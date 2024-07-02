@@ -101,6 +101,7 @@ const MapEditorContainer = ({ data }) => {
       setContextTables(currentMap, newTables);
     }
   };
+  
 
   const onSaveMapHandler = () => {
     const formData = new FormData();
@@ -212,7 +213,7 @@ const MapEditorContainer = ({ data }) => {
 
           </div>
         </RightContainer>
-        <div className="flex justify-center">
+        <div className="flex justify-center gap-1">
           <button
             type="button"
             onClick={currentMap? onEditMapHandler : onSaveMapHandler}

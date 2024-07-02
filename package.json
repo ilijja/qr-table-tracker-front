@@ -13,10 +13,14 @@
   "dependencies": {
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.1.1",
+    "@stripe/stripe-js": "^3.5.0",
     "konva": "^9.3.5",
+    "lucide-react": "^0.399.0",
+    "qrcode.react": "^3.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-konva": "^18.2.10",
+    "react-qr-code": "^2.0.15",
     "react-router-dom": "^6.22.1",
     "socket.io-client": "^4.7.4"
   },

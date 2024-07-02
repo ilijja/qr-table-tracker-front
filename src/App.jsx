@@ -27,12 +27,18 @@ import { action as userMenuAction } from "./pages/UserMenuPage";
 import { loader as userMenuLoader } from "./pages/UserMenuPage";
 import MapPage from "./pages/MapPage";
 import { loader as mapLoader } from "./pages/MapPage";
-import { action as addMapAction } from "./pages/MapPage";
+import { action as addMapAction } from "./pages/Maps";
 import { loader as orderMenuLoader } from "./pages/OrderMenuPage";
 import { action as orderMenuAction } from "./pages/OrderMenuPage";
 import OrderMenuPage from "./pages/OrderMenuPage";
-import PaymentPage, {action as paymentAction, loader as paymentLoader} from './pages/PaymentPage'
+import PaymentPage, {
+  action as paymentAction,
+  loader as paymentLoader,
+} from "./pages/PaymentPage";
 import TablePage from "./pages/TablePage";
+import SuccessPayment from "./pages/SuccessPayment";
+import ErrorPayment from "./pages/ErrorPayment";
+import QRCodePage from "./pages/QRCodePage";
 
 const router = createBrowserRouter([
   {
@@ -87,9 +93,18 @@ const router = createBrowserRouter([
           },
           {
             path: "maps",
-            element: <MapPage />,
-            loader: mapLoader,
             action: addMapAction,
+            children: [
+              {
+                path: "",
+                element: <MapPage />,
+                loader: mapLoader,
+              },
+              {
+                path: "qr/:id",
+                element: <QRCodePage />,
+              },
+            ],
           },
         ],
       },
@@ -116,20 +131,28 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: 'table',
+        path: "table",
         children: [
           {
-            path: ':id',
-            element: <TablePage/>,
-          }
-        ]
+            path: ":id",
+            element: <TablePage />,
+          },
+        ],
       },
       {
         path: "payment",
         children: [
           {
+            path: "success",
+            element: <SuccessPayment />,
+          },
+          {
+            path: "error",
+            element: <ErrorPayment />,
+          },
+          {
             path: ":id",
-            element: <PaymentPage/>,
+            element: <PaymentPage />,
             loader: paymentLoader,
             action: paymentAction,
           },

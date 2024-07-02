@@ -1,18 +1,22 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { PlusIcon, MinusIcon } from "@heroicons/react/24/outline";
+import OrderContext from "../../../store/OrderContext";
 
 const ItemView = ({ item, onTotalChange }) => {
   const [count, setCount] = useState(0);
   const [productTotal, setProductTotal] = useState(0);
+  const {addUserSelectedItems, removeUserSelectedItems} = useContext(OrderContext)
 
   const increaseCount = () => {
     if (count < item.quantity) {
+      addUserSelectedItems(item)
       setCount((prev) => prev + 1);
     }
   };
 
   const decreaseCount = () => {
     if (count > 0) {
+      removeUserSelectedItems(item)
       setCount((prev) => prev - 1);
     }
   };

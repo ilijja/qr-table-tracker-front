@@ -9,35 +9,27 @@ export async function action({ params, request }) {
   }
 
   const menuId = params.id;
-
   const formData = await request.formData();
   const method = request.method;
 
-  const data = {
-    name: formData.get("name"),
-    description: formData.get("description"),
-    price: formData.get("price"),
-  };
+  // Prikupljanje podataka iz forme
+  // const data = {
+  //   name: formData.get("name"),
+  //   description: formData.get("description"),
+  //   price: formData.get("price"),
+  //   image: formData.get("image") 
+  // };
 
   const options = {
     method: method,
     headers: {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   };
 
   const path = "http://localhost:8080/menu/product";
 
-  if (method === "POST") {
-    data.categoryId = formData.get("categoryId")
-  }
-  
-  if(method === "PUT"){
-    data.productId = formData.get("productId")
-  }
-
-  options.body = JSON.stringify(data);
+  options.body = formData
 
   const response = await fetch(path, options);
 

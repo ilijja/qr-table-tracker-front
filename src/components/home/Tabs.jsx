@@ -1,11 +1,12 @@
 import { useEffect, useContext, useState } from "react";
 import RightContainer from "../RightContainer";
 import MapView from "../map/MapView";
-import { useSubmit } from "react-router-dom";
+import { useNavigate, useSubmit } from "react-router-dom";
 import UserProgressContext from "../../store/UserProgressContext";
 import MapContext from "../../store/MapContext";
 import Modal from "../Modal";
 import OrderQuickview from "../user/OrderQuickview";
+import { CirclePlus } from "lucide-react";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -22,6 +23,7 @@ const Tabs = () => {
   const { maps } = useContext(MapContext);
 
   const submit = useSubmit();
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (!maps.length) return;
@@ -45,6 +47,10 @@ const Tabs = () => {
     setCurrentTable(table);
     showOrdersModal();
   };
+
+  const handleAddMap = () => {
+    navigate('/maps')
+  }
 
   return (
     <>
@@ -82,11 +88,32 @@ const Tabs = () => {
         </div>
       </div>
 
-      <RightContainer className="bg-floor-pattern flex justify-center">
-        {currentTab && (
-          <MapView tables={currentTab.tables} onClickItem={onClickItem} />
-        )}
-      </RightContainer>
+      {maps.length > 0 && (
+        <RightContainer className="bg-floor-pattern flex justify-center">
+          {currentTab && (
+            <MapView tables={currentTab.tables} onClickItem={onClickItem} />
+          )}
+        </RightContainer>
+      )}
+
+      {maps.length === 0 && (
+        <RightContainer>
+          <div className="gap-2 w-full h-64 rounded-lg border border-dashed border-gray-200 items-center justify-center">
+            <div className="flex flex-col items-center justify-center gap-2  h-full w-full bg-gray-100 rounded-lg">
+              <CirclePlus size={32} className=" text-gray-500"/>
+              <p className="text-gray-800 text-md mt-2 font-medium">No maps added</p>
+              <p className="text-gray-500 text-sm font-light mb-2">You have not added any map. Add one below.</p>
+              <button
+                type="button"
+                onClick={handleAddMap}
+                className="flex p-3 w-32 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Add Map
+              </button>
+            </div>
+          </div>
+        </RightContainer>
+      )}
 
       <OrderQuickview />
     </>

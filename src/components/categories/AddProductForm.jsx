@@ -31,7 +31,7 @@ const AddProductForm = (props) => {
       onClose={closeModalMenu}
     >
       <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
-        <Form method={method} action="addProduct">
+        <Form method={method} action="addProduct" encType="multipart/form-data">
           <div className="flex flex-col gap-4 text-left sm:mt-1">
             <Dialog.Title
               as="h3"
@@ -118,13 +118,13 @@ const AddProductForm = (props) => {
                     />
                     <div className="mt-4 flex text-sm leading-6 text-gray-600">
                       <label
-                        htmlFor="file-upload"
+                        htmlFor="image"
                         className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
                       >
                         <span>Upload a file</span>
                         <input
-                          id="file-upload"
-                          name="file-upload"
+                          id="image"
+                          name="image"
                           type="file"
                           className="sr-only"
                         />
